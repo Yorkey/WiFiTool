@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import be.shouldit.proxy.lib.WiFiApConfig;
 import be.shouldit.proxy.lib.enums.SecurityType;
 import cn.helloyy.infinite.base.BaseListAdapter;
+import cn.helloyy.infinite.interf.RvItemClickListener;
 import cn.helloyy.wifitool.R;
 import cn.helloyy.wifitool.ui.viewholders.WiFiApListViewHolder;
 

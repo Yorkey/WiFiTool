@@ -34,11 +34,13 @@
         android:layout_margin="15dp"/>
 
     <Button
+        android:id="@+id/selectProxy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select a Proxy"/>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/proxyDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp">
