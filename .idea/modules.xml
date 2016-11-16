@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WiFiTool.iml" filepath="$PROJECT_DIR$/WiFiTool.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/infinite/infinite.iml" filepath="$PROJECT_DIR$/infinite/infinite.iml" />
     </modules>
   </component>
 </project>
