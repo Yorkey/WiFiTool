@@ -8,7 +8,7 @@
     android:background="@drawable/list_item_touch_bg"
     app:alignItems="center">
 
-    <cn.helloyy.wifitool.ui.components.WifiSignal
+    <cn.helloyy.wifitool.components.WifiSignal
         android:id="@+id/wifi_ap_signal_icon"
         android:layout_gravity="center"
         android:layout_width="40dp"

@@ -20,6 +20,7 @@ import com.bluelinelabs.conductor.RouterTransaction;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.helloyy.wifitool.controllers.AccessPointListController;
 import cn.helloyy.wifitool.controllers.SimpleHomeController;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
-            router.setRoot(RouterTransaction.with(new SimpleHomeController()));
+            router.setRoot(RouterTransaction.with(new AccessPointListController()));
         }
     }
 
