@@ -74,6 +74,11 @@ public class AccessPointListController extends BaseController implements SwipeRe
     }
 
     @Override
+    protected void onAttach(@NonNull View view) {
+        super.onAttach(view);
+    }
+
+    @Override
     public void onRefresh() {
         this.loadApList();
     }

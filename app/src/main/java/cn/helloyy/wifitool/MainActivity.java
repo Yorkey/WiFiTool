@@ -3,6 +3,7 @@ package cn.helloyy.wifitool;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.bluelinelabs.conductor.Conductor;
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
 
@@ -42,11 +45,27 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
             router.setRoot(RouterTransaction.with(new AccessPointListController()));
         }
+
+
+        router.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
+            @Override
+            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+
+            }
+
+            @Override
+            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
+
+                getSupportActionBar().setDisplayHomeAsUpEnabled(router.getBackstackSize() > 1);
+                getSupportActionBar().setHomeButtonEnabled(router.getBackstackSize() > 1);
+            }
+        });
+
+
     }
 
     @Override
@@ -54,5 +73,15 @@ public class MainActivity extends AppCompatActivity {
         if (!router.handleBack()) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //监听左上角的返回箭头
+        if(item.getItemId()==android.R.id.home){
+            router.handleBack();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
