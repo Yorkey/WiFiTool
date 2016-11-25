@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,9 @@ import rx.schedulers.Schedulers;
 
 public class AccessPointListController extends BaseController implements SwipeRefreshLayout.OnRefreshListener{
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
     @Bind(R.id.recyclerView)
     EasyRecyclerView recyclerView;
 
@@ -47,6 +51,8 @@ public class AccessPointListController extends BaseController implements SwipeRe
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        toolbar.setTitle("APList");
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         DividerDecoration decoration = new DividerDecoration(Color.GRAY, 1, 15, 15);

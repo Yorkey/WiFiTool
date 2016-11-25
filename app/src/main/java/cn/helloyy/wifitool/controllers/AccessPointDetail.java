@@ -2,6 +2,7 @@ package cn.helloyy.wifitool.controllers;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import cn.helloyy.wifitool.util.BundleBuilder;
 public class AccessPointDetail extends BaseController {
 
     private static final String KEY_AP_DATA = "AccessPointDetail.ap-data";
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Bind(R.id.proxySwitch)
     Switch proxySwitch;
@@ -63,6 +67,15 @@ public class AccessPointDetail extends BaseController {
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        toolbar.setTitle("APDetail");
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getRouter().popCurrentController();
+            }
+        });
 
         proxySwitch.setChecked(wifiApConfig.getProxySetting() == ProxySetting.STATIC);
 
