@@ -14,12 +14,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.bluelinelabs.conductor.Conductor;
 import com.bluelinelabs.conductor.Controller;
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.Router;
 import com.bluelinelabs.conductor.RouterTransaction;
+
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,10 +34,9 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.controller_container)
     ViewGroup container;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-
     private Router router;
+
+    private long lastBackPress = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,45 +45,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-
         router = Conductor.attachRouter(this, container, savedInstanceState);
         if (!router.hasRootController()) {
             router.setRoot(RouterTransaction.with(new AccessPointListController()));
         }
-
-
-        router.addChangeListener(new ControllerChangeHandler.ControllerChangeListener() {
-            @Override
-            public void onChangeStarted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-
-            }
-
-            @Override
-            public void onChangeCompleted(@Nullable Controller to, @Nullable Controller from, boolean isPush, @NonNull ViewGroup container, @NonNull ControllerChangeHandler handler) {
-
-                getSupportActionBar().setDisplayHomeAsUpEnabled(router.getBackstackSize() > 1);
-                getSupportActionBar().setHomeButtonEnabled(router.getBackstackSize() > 1);
-            }
-        });
-
 
     }
 
     @Override
     public void onBackPressed() {
         if (!router.handleBack()) {
-            super.onBackPressed();
+            long now = new Date().getTime();
+            if (now - lastBackPress > 2000) {
+                lastBackPress = now;
+                Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //监听左上角的返回箭头
-        if(item.getItemId()==android.R.id.home){
-            router.handleBack();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
