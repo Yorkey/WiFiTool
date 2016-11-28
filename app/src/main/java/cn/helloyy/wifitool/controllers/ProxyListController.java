@@ -2,9 +2,7 @@ package cn.helloyy.wifitool.controllers;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +14,8 @@ import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import be.shouldit.proxy.lib.WiFiApConfig;
@@ -24,17 +24,20 @@ import cn.helloyy.wifitool.App;
 import cn.helloyy.wifitool.R;
 import cn.helloyy.wifitool.base.BaseController;
 import cn.helloyy.wifitool.base.ControllerWithToolbar;
+import cn.helloyy.wifitool.model.WifiProxy;
+import cn.helloyy.wifitool.model.WifiProxyDao;
 import cn.helloyy.wifitool.viewholders.ApListViewHolder;
-import rx.Observable;
+import cn.helloyy.wifitool.viewholders.ProxyListViewHolder;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by wangyu on 2016/11/17.
+ * Created by wangyu on 2016/11/27.
  */
 
-public class AccessPointListController extends ControllerWithToolbar implements SwipeRefreshLayout.OnRefreshListener{
+public class ProxyListController extends ControllerWithToolbar {
 
 
     @Bind(R.id.recyclerView)
@@ -42,20 +45,21 @@ public class AccessPointListController extends ControllerWithToolbar implements 
 
     private RecyclerArrayAdapter adapter;
 
-
     @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
-        return inflater.inflate(R.layout.controller_ap_list, container, false);
+        return inflater.inflate(R.layout.controller_proxy_list, container, false);
     }
 
     @Override
     protected String getTitle() {
-        return "APList";
+        return "ProxyList";
     }
 
     @Override
     protected void onViewBound(@NonNull View view) {
         super.onViewBound(view);
+
+        this.showBackNavigator();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         DividerDecoration decoration = new DividerDecoration(Color.GRAY, 1, 15, 15);
@@ -65,39 +69,28 @@ public class AccessPointListController extends ControllerWithToolbar implements 
 
             @Override
             public BaseViewHolder OnCreateViewHolder(ViewGroup parent, int viewType) {
-                return new ApListViewHolder(parent);
+                return new ProxyListViewHolder(parent);
             }
         });
-
-        recyclerView.setRefreshListener(this);
 
         adapter.setOnItemClickListener(new RecyclerArrayAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                WiFiApConfig wifiApConfig = (WiFiApConfig)adapter.getItem(position);
-                getRouter().pushController(RouterTransaction.with(new AccessPointDetail(wifiApConfig)));
+                getRouter().popCurrentController();
+                WifiProxy wifiProxy = (WifiProxy)adapter.getItem(position);
+                EventBus.getDefault().post(new AccessPointDetail.ProxySelectEvent(wifiProxy));
             }
         });
 
-        this.loadApList();
+        this.loadProxyList();
+
     }
 
-    @Override
-    protected void onAttach(@NonNull View view) {
-        super.onAttach(view);
-    }
-
-    @Override
-    public void onRefresh() {
-        this.loadApList();
-    }
-
-
-    public void loadApList() {
-        Observable<List<WiFiApConfig>> wifiApObservable = App.getWifiNetworksManager().getSortedWifiApConfigsList2();
-        wifiApObservable.subscribeOn(Schedulers.io())
+    public void loadProxyList() {
+        WifiProxyDao wifiProxyDao = App.getInstance().getDaoSession().getWifiProxyDao();
+        wifiProxyDao.rx().loadAll().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<WiFiApConfig>>() {
+                .subscribe(new Subscriber<List<WifiProxy>>() {
                     @Override
                     public void onCompleted() {
 
@@ -105,16 +98,14 @@ public class AccessPointListController extends ControllerWithToolbar implements 
 
                     @Override
                     public void onError(Throwable e) {
-                        recyclerView.showError();
+
                     }
 
                     @Override
-                    public void onNext(List<WiFiApConfig> wiFiApConfigs) {
+                    public void onNext(List<WifiProxy> wifiProxies) {
                         adapter.clear();
-                        adapter.addAll(wiFiApConfigs);
+                        adapter.addAll(wifiProxies);
                     }
                 });
     }
-
-
 }

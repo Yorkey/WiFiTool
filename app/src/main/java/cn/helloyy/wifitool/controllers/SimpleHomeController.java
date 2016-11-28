@@ -22,9 +22,4 @@ public class SimpleHomeController extends BaseController {
         return view;
     }
 
-
-    @Override
-    protected String getTitle() {
-        return "WiFiTool";
-    }
 }

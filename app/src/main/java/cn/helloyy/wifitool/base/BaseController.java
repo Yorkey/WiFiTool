@@ -29,30 +29,9 @@ public abstract class BaseController extends RxController {
         super(args);
     }
 
-    // Note: This is just a quick demo of how an ActionBar *can* be accessed, not necessarily how it *should*
-    // be accessed. In a production app, this would use Dagger instead.
-    protected ActionBar getActionBar() {
-        AppCompatActivity  activity = (AppCompatActivity)getActivity();
-        return activity != null ? activity.getSupportActionBar() : null;
-    }
-
     @Override
     protected void onAttach(@NonNull View view) {
-        setTitle();
         super.onAttach(view);
-    }
-
-    protected void setTitle() {
-
-        String title = getTitle();
-        ActionBar actionBar = getActionBar();
-        if (title != null && actionBar != null) {
-            actionBar.setTitle(title);
-        }
-    }
-
-    protected String getTitle() {
-        return null;
     }
 
     protected abstract View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container);
