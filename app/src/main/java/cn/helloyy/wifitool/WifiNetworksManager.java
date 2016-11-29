@@ -7,6 +7,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,6 +114,20 @@ public class WifiNetworksManager {
                 getWifiNetworkStatus().put(aplNetworkId, updatedConfiguration);
             }
 //            }
+
+            WifiInfo info = APL.getWifiManager().getConnectionInfo();
+            if (info != null) {
+                int networkId = info.getNetworkId();
+                if (networkId == updatedConfiguration.getNetworkId()) {
+                    Log.d("MYTest", "equal");
+                    this.updateCurrentConfiguration();
+                    try {
+                        APL.writeWifiAPConfig(updatedConfiguration, 3, 6000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -75,7 +76,9 @@ public class AccessPointListController extends ControllerWithToolbar implements 
             @Override
             public void onItemClick(int position) {
                 WiFiApConfig wifiApConfig = (WiFiApConfig)adapter.getItem(position);
-                getRouter().pushController(RouterTransaction.with(new AccessPointDetail(wifiApConfig)));
+                getRouter().pushController(RouterTransaction.with(new AccessPointDetail(wifiApConfig))
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
             }
         });
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
 import be.shouldit.proxy.lib.WiFiApConfig;
 import be.shouldit.proxy.lib.reflection.android.ProxySetting;
 import butterknife.Bind;
+import cn.helloyy.wifitool.App;
 import cn.helloyy.wifitool.R;
 import cn.helloyy.wifitool.base.BaseController;
 import cn.helloyy.wifitool.base.ControllerWithToolbar;
@@ -89,7 +91,18 @@ public class AccessPointDetail extends ControllerWithToolbar {
             public boolean onMenuItemClick(MenuItem item) {
 
                 if (item.getItemId() == R.id.action_save) {
-
+                    boolean preEnable = wifiApConfig.getProxySetting() == ProxySetting.STATIC;
+                    boolean checked = proxySwitch.isChecked();
+                    String host = hostEdit.getText().toString();
+                    Integer port = new Integer(portEdit.getText().toString());
+                    if (preEnable != checked ||
+                            !host.equals(wifiApConfig.getProxyHost()) ||
+                            !port.equals(wifiApConfig.getProxyPort())) {
+                        wifiApConfig.setProxySetting(checked ? ProxySetting.STATIC : ProxySetting.NONE);
+                        wifiApConfig.setProxyHost(host);
+                        wifiApConfig.setProxyPort(port);
+                        App.getWifiNetworksManager().updateWifiConfig(wifiApConfig);
+                    }
                     Toast.makeText(getActivity(), "Save", Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -111,8 +124,8 @@ public class AccessPointDetail extends ControllerWithToolbar {
             @Override
             public void onClick(View v) {
                 getRouter().pushController(RouterTransaction.with(new ProxyListController())
-                        .pushChangeHandler(new FadeChangeHandler())
-                        .popChangeHandler(new FadeChangeHandler()));
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
             }
         });
 

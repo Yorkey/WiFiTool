@@ -2,13 +2,17 @@ package cn.helloyy.wifitool.controllers;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -43,6 +47,9 @@ public class ProxyListController extends ControllerWithToolbar {
     @Bind(R.id.recyclerView)
     EasyRecyclerView recyclerView;
 
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
+
     private RecyclerArrayAdapter adapter;
 
     @Override
@@ -60,6 +67,17 @@ public class ProxyListController extends ControllerWithToolbar {
         super.onViewBound(view);
 
         this.showBackNavigator();
+
+        Toolbar toolbar = this.getToolbar();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getRouter().pushController(RouterTransaction.with(new ProxyEditController())
+                        .pushChangeHandler(new HorizontalChangeHandler())
+                        .popChangeHandler(new HorizontalChangeHandler()));
+            }
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         DividerDecoration decoration = new DividerDecoration(Color.GRAY, 1, 15, 15);
