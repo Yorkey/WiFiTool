@@ -6,10 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bluelinelabs.conductor.RouterTransaction;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
@@ -22,17 +20,14 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import be.shouldit.proxy.lib.WiFiApConfig;
 import butterknife.Bind;
 import cn.helloyy.wifitool.App;
 import cn.helloyy.wifitool.R;
-import cn.helloyy.wifitool.base.BaseController;
 import cn.helloyy.wifitool.base.ControllerWithToolbar;
 import cn.helloyy.wifitool.model.WifiProxy;
 import cn.helloyy.wifitool.model.WifiProxyDao;
-import cn.helloyy.wifitool.viewholders.ApListViewHolder;
+import cn.helloyy.wifitool.util.Utils;
 import cn.helloyy.wifitool.viewholders.ProxyListViewHolder;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -80,7 +75,9 @@ public class ProxyListController extends ControllerWithToolbar {
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        DividerDecoration decoration = new DividerDecoration(Color.GRAY, 1, 15, 15);
+
+        int padding =(int) Utils.convertDpToPixel(15, getApplicationContext());
+        DividerDecoration decoration = new DividerDecoration(R.color.listDivider, 1, padding, padding);
         recyclerView.addItemDecoration(decoration);
 
         recyclerView.setAdapterWithProgress(adapter = new RecyclerArrayAdapter(view.getContext()) {
@@ -96,7 +93,7 @@ public class ProxyListController extends ControllerWithToolbar {
             public void onItemClick(int position) {
                 getRouter().popCurrentController();
                 WifiProxy wifiProxy = (WifiProxy)adapter.getItem(position);
-                EventBus.getDefault().post(new AccessPointDetail.ProxySelectEvent(wifiProxy));
+                EventBus.getDefault().post(new AccessPointDetailController.ProxySelectEvent(wifiProxy));
             }
         });
 

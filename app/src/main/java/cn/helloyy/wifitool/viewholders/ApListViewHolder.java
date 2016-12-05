@@ -1,6 +1,7 @@
 package cn.helloyy.wifitool.viewholders;
 
 import android.support.annotation.LayoutRes;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 import be.shouldit.proxy.lib.WiFiApConfig;
+import be.shouldit.proxy.lib.utils.ProxyUtils;
 import cn.helloyy.wifitool.R;
 import cn.helloyy.wifitool.components.WifiSignal;
 

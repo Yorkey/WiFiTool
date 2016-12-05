@@ -1,90 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/default_toolbar"/>
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="match_parent"
+        <include android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textSize="14sp" />
-
-        <cn.helloyy.wifitool.components.WifiSignal
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </cn.helloyy.wifitool.components.WifiSignal>
-
-    </LinearLayout>
-
-    <Switch
-        android:id="@+id/proxySwitch"
-        android:text="Proxy Enabled"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"/>
-
-    <Button
-        android:id="@+id/selectProxy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Select a Proxy"/>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/proxyDetail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp">
+            layout="@layout/default_toolbar"/>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="15dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <cn.helloyy.wifitool.components.WifiSignal
+                android:id="@+id/ap_wifi_signal"
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+            </cn.helloyy.wifitool.components.WifiSignal>
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:id="@+id/hostEdit"
-                    android:inputType="textUri"
-                    android:hint="请输入Host" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/portEdit"
-                    android:hint="请输入端口"
-                    android:inputType="number"
-                    android:maxLength="5" />
-
-            </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:id="@+id/ap_ssid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/textLevelOne"/>
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/listDivider"/>
 
+        <Switch
+            android:id="@+id/proxySwitch"
+            android:text="开启代理"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/selectProxy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="选择一个代理"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/proxyDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:id="@+id/hostEdit"
+                        android:inputType="textUri"
+                        android:hint="请输入Host" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/portEdit"
+                        android:hint="请输入端口"
+                        android:inputType="number"
+                        android:maxLength="5" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

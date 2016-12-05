@@ -11,22 +11,24 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 import com.bluelinelabs.conductor.changehandler.HorizontalChangeHandler;
+import com.bluelinelabs.conductor.changehandler.VerticalChangeHandler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import be.shouldit.proxy.lib.APLNetworkId;
 import be.shouldit.proxy.lib.WiFiApConfig;
 import be.shouldit.proxy.lib.reflection.android.ProxySetting;
 import butterknife.Bind;
 import cn.helloyy.wifitool.App;
 import cn.helloyy.wifitool.R;
-import cn.helloyy.wifitool.base.BaseController;
 import cn.helloyy.wifitool.base.ControllerWithToolbar;
+import cn.helloyy.wifitool.components.WifiSignal;
 import cn.helloyy.wifitool.model.WifiProxy;
 import cn.helloyy.wifitool.util.BundleBuilder;
 
@@ -34,9 +36,15 @@ import cn.helloyy.wifitool.util.BundleBuilder;
  * Created by wangyu on 2016/11/17.
  */
 
-public class AccessPointDetail extends ControllerWithToolbar {
+public class AccessPointDetailController extends ControllerWithToolbar {
 
-    private static final String KEY_AP_DATA = "AccessPointDetail.ap-data";
+    private static final String KEY_AP_ID = "AccessPointDetailController.ap-data";
+
+    @Bind(R.id.ap_wifi_signal)
+    WifiSignal wifiSignal;
+
+    @Bind(R.id.ap_ssid)
+    TextView apSsid;
 
     @Bind(R.id.proxySwitch)
     Switch proxySwitch;
@@ -53,19 +61,23 @@ public class AccessPointDetail extends ControllerWithToolbar {
     @Bind(R.id.selectProxy)
     Button selectProxy;
 
+    @Bind(R.id.overlay)
+    ViewGroup overlayRoot;
+
     private WiFiApConfig wifiApConfig;
 
-    public AccessPointDetail(WiFiApConfig wifiApConfig) {
+    public AccessPointDetailController(APLNetworkId networkId) {
         this(new BundleBuilder()
-                .putParcelable(KEY_AP_DATA, wifiApConfig)
+                .putParcelable(KEY_AP_ID, networkId)
                 .build());
 
     }
 
-    public AccessPointDetail(Bundle args) {
+    public AccessPointDetailController(Bundle args) {
         super(args);
 
-        wifiApConfig = (WiFiApConfig)args.getParcelable(KEY_AP_DATA);
+        APLNetworkId networkId = (APLNetworkId)args.getParcelable(KEY_AP_ID);
+        wifiApConfig = App.getWifiNetworksManager().getConfiguration(networkId);
     }
 
     @Override
@@ -75,7 +87,7 @@ public class AccessPointDetail extends ControllerWithToolbar {
 
     @Override
     protected String getTitle() {
-        return "APDetail";
+        return "热点详情";
     }
 
     @Override
@@ -111,6 +123,9 @@ public class AccessPointDetail extends ControllerWithToolbar {
             }
         });
 
+        wifiSignal.setConfiguration(wifiApConfig);
+        apSsid.setText(wifiApConfig.getSSID());
+
         boolean enable = wifiApConfig.getProxySetting() == ProxySetting.STATIC;
         proxySwitch.setChecked(enable);
         proxySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -123,9 +138,10 @@ public class AccessPointDetail extends ControllerWithToolbar {
         selectProxy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getRouter().pushController(RouterTransaction.with(new ProxyListController())
-                        .pushChangeHandler(new HorizontalChangeHandler())
-                        .popChangeHandler(new HorizontalChangeHandler()));
+                getChildRouter(overlayRoot).setPopsLastView(true)
+                        .pushController(RouterTransaction.with(new ProxyListOverlayController())
+                        .pushChangeHandler(new VerticalChangeHandler())
+                        .popChangeHandler(new VerticalChangeHandler()));
             }
         });
 
